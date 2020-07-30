@@ -8,4 +8,6 @@ let codeSchema = new mongoose.Schema({
     codes: [String]
 });
 
-mongoose.model('Code', codeSchema);
+const Code = mongoose.model('Code', codeSchema);
+
+exports.Code = Code;
