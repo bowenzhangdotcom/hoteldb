@@ -1,11 +1,9 @@
 const express = require("express");
-let app = express();
-let port = 3000;
+const mongoose = require('mongoose');
+let router = express.Router();
+const Code = mongoose.model('Code')
 
-app.get("/", (req, res) => {
-    res.send("testing with hello world");
-});
-
-app.listen(port, () => {
-    console.log("Server listening on port" + port);
+router.get('/marriott', (req,res) => { 
+    mariottCodes = await Code.find({name: 'marriott'});
+    res.send(mariottCodes);
 });
