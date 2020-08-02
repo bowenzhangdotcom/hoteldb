@@ -1,19 +1,9 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const {Code} = require('./model/hotelCode');
 
 const app = express();
 app.use(express.json());
-
-let codeSchema = new mongoose.Schema({
-    hotelName: {
-        type: String,
-        required: true
-    },
-    codes: [String]
-});
-
-const Code = mongoose.model('Code', codeSchema);
 
 mongoose.connect('mongodb://localhost:27017/hoteldb', {useNewUrlParser: true, useUnifiedTopology:  true});
 
@@ -24,14 +14,14 @@ app.listen(port, ()=> {
 });
 
 app.get('/', async (req, res) => {
-    let hotelName = req.body.hotelName;
-
-    const codes = await Code.find({
-        'hotelName': hotelName
-    });
-
-    if (!codes) return res.status(404).send('The specified hotel was not found');
-    res.send(codes);
+    try {
+        let hotelCodes = await Code.find({
+            'hotelName': req.body.hotelName
+        });
+        res.send(hotelCodes);
+    } catch(error) {
+        res.send(error.message);
+    };
 });
 
 app.post('/', async (req, res) => {   
@@ -47,8 +37,5 @@ app.post('/', async (req, res) => {
     }
 });
 
-// todo: 
-// test post
-// test get
 // make put
 // test put

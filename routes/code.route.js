@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 let router = express.Router();
-const Code = require('../model/code.model');
+const Code = require('../model/hotelCode');
 
 router.get('/', async (req,res) => { 
     const hotelCodes = await Code.find({name: 'marriott'});

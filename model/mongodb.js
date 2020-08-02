@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('./code.model.js');
+require('./hotelCode.js/index.js');
 
 mongoose.connect('mongodb://localhost:27017/hoteldb.codes', {useNewUrlParser: true}, () => {
     if(!err) {

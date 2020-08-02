@@ -1,9 +1,9 @@
-const mongoose = require('mogoose');
+const mongoose = require('mongoose');
 
 let codeSchema = new mongoose.Schema({
     hotelName: {
         type: String,
-        required: 'This field is required!'
+        required: true
     },
     codes: [String]
 });
