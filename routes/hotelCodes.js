@@ -14,15 +14,20 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {   
-    try {
-        let newHotel = new Code({ 
-            hotelName: req.body.hotelName,
-            codes: req.body.codes
-        });
-        newHotel = await newHotel.save();
-        res.send(newHotel);
-    } catch(error) {
-        res.send(error.message);
+    const hotelExist = await Code.exists({hotelName: req.body.hotelName});
+    if (hotelExist) {
+        res.status(400).send('Hotel already exists');
+    } else {
+        try {
+            let newHotel = new Code({ 
+                hotelName: req.body.hotelName,
+                codes: req.body.codes
+            });
+            newHotel = await newHotel.save();
+            res.send(newHotel);
+        } catch(error) {
+            res.send(error.message);
+        }
     }
 });
 
