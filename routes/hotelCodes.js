@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const {Code} = require('../model/hotelCode');
+const {userAuth,adminAuth} = require('../middleware/auth');
 
-router.get('/', async (req, res) => {
+router.get('/', userAuth, async (req, res) => {
     try {
         let hotelCodes = await Code.find({
             'hotelName': req.body.hotelName
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
     };
 });
 
-router.post('/', async (req, res) => {   
+router.post('/', adminAuth, async (req, res) => {   
     const hotelExist = await Code.exists({hotelName: req.body.hotelName});
     if (hotelExist) {
         res.status(400).send('Hotel already exists');
