@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Code} = require('../model/hotelCode');
+const {validateCode,Code} = require('../model/hotelCode');
 const {generalAuth,adminAuth} = require('../middleware/auth');
 
 router.get('/', generalAuth, async (req, res) => {
@@ -15,7 +15,11 @@ router.get('/', generalAuth, async (req, res) => {
 });
 
 router.post('/', adminAuth, async (req, res) => {   
+    const {error} = validateCode(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
     const hotelExist = await Code.exists({hotelName: req.body.hotelName});
+
     if (hotelExist) {
         res.status(400).send('Hotel already exists');
     } else {
