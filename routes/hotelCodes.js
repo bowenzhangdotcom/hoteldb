@@ -36,4 +36,39 @@ router.post('/', adminAuth, async (req, res) => {
     }
 });
 
+router.delete('/', adminAuth, async (req, res) => {
+    try {
+        let hotelCodes = await Code.deleteOne({
+            'hotelName': req.body.hotelName
+        });
+        if (hotelCodes.n < 1) return res.status(400).send('The hotel with the given name was not found');
+        res.send(`The ${req.body.hotelName} has been deleted`);
+    } catch(error) {
+        res.send(error.message);
+    };
+});
+
+router.put('/', adminAuth, async (req, res) => {   
+    const {error} = validateCode(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+    let hotelUpdate = await Code.findOne({hotelName: req.body.hotelName});
+
+    if (!hotelUpdate) {
+        res.status(400).send('Hotel not found');
+    } else {
+        try {
+            req.body.codes.forEach(newCode => {
+                if(!hotelUpdate.codes.includes(newCode)) {
+                    hotelUpdate.codes.push(newCode);
+                };
+            });
+            hotelUpdate = await hotelUpdate.save();
+            res.send(hotelUpdate);
+        } catch(error) {
+            res.send(error.message);
+        }
+    }
+});
+
 module.exports = router;
